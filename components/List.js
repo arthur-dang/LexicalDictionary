@@ -4,30 +4,16 @@ import {
 } from 'react-native';
 
 import { Input, ListItem, Icon } from 'react-native-elements';
-// import { Icon } from 'react-native-vector-icons/FontAwesome';
+import WordEdit from './WordEdit';
+import WordDisplay from './WordDisplay';
 
 const Item = ({ title, pressHandler, isEditing }) => (
   <>
     {isEditing
       ? (
-        <ListItem
-          title={isEditing ? (<Input placeholder="Basic input" />) : title}
-          bottomDivider
-          rightIcon={(
-            <Icon
-              name="check"
-              type="font-awesome"
-              onPress={pressHandler}
-            />
-          )}
-        />
+        <WordEdit pressHandler={pressHandler} />
       ) : (
-        <ListItem
-          title={title}
-          bottomDivider
-          chevron
-          onPress={pressHandler}
-        />
+        <WordDisplay title={title} pressHandler={pressHandler} />
       )}
   </>
 );
@@ -44,7 +30,7 @@ class List extends React.Component {
         },
         {
           id: '2',
-          title: 'Second Item',
+          title: 'Secondary Item',
           isEditing: false,
         },
       ],
@@ -67,11 +53,11 @@ class List extends React.Component {
           renderItem={({ item, index }) => <Item title={item.title} pressHandler={() => this.pressHandler(index)} isEditing={item.isEditing} />}
           keyExtractor={(item) => item.id}
         />
-        <ListItem
-          title={<TextInput placeholder="Basic input" />}
-          bottomDivider
-          chevron
-        />
+        {/* <ListItem */}
+        {/*  title={<TextInput placeholder="Basic input" />} */}
+        {/*  bottomDivider */}
+        {/*  chevron */}
+        {/* /> */}
         <ListItem
           title={(
             <Input
