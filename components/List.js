@@ -1,6 +1,10 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
-import { Input, ListItem } from 'react-native-elements';
+import {
+  View, FlatList, TextInput, Alert, Text
+} from 'react-native';
+
+import { Input, ListItem, Icon } from 'react-native-elements';
+// import { Icon } from 'react-native-vector-icons/FontAwesome';
 
 const Item = ({ title, pressHandler, isEditing }) => (
   <>
@@ -9,7 +13,13 @@ const Item = ({ title, pressHandler, isEditing }) => (
         <ListItem
           title={isEditing ? (<Input placeholder="Basic input" />) : title}
           bottomDivider
-          chevron
+          rightIcon={(
+            <Icon
+              name="check"
+              type="font-awesome"
+              onPress={pressHandler}
+            />
+          )}
         />
       ) : (
         <ListItem
@@ -35,38 +45,45 @@ class List extends React.Component {
         {
           id: '2',
           title: 'Second Item',
-        },
-        {
-          id: '3',
-          title: '2 Item',
+          isEditing: false,
         },
       ],
     };
   }
 
-  pressHandler = () => {
-    this.setState({
-      list: [
-        {
-          id: '1',
-          title: 'First Item',
-          isEditing: true,
-        },
-        {
-          id: '2',
-          title: 'Second Item',
-        },
-      ],
-    });
+  pressHandler = (i) => {
+    const { list } = this.state;
+    const newList = list.slice(); // need to do a copy ?
+    newList.splice(i, 1, { ...list[i], isEditing: !list[i].isEditing }); // splice return the removed elements and not the list
+    this.setState((state) => ({ list: newList } ));
   };
 
   render() {
+    const { list } = this.state;
     return (
       <View>
         <FlatList
-          data={this.state.list}
-          renderItem={({ item }) => <Item title={item.title} pressHandler={this.pressHandler} isEditing={item.isEditing} />}
+          data={list}
+          renderItem={({ item, index }) => <Item title={item.title} pressHandler={() => this.pressHandler(index)} isEditing={item.isEditing} />}
           keyExtractor={(item) => item.id}
+        />
+        <ListItem
+          title={<TextInput placeholder="Basic input" />}
+          bottomDivider
+          chevron
+        />
+        <ListItem
+          title={(
+            <Input
+              inputStyle={{
+                alignSelf: 'flex-start',
+                minHeight: 0,
+              }}
+              placeholder="Basic input"
+            />
+          )}
+          bottomDivider
+          chevron
         />
       </View>
     );
